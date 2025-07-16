@@ -15,5 +15,5 @@
 homepage: "https://www.thinkingdata.kr"
 documentation: "https://docs-v2.thinkingdata.kr/?version=latest&lan=ko-KR&code=javascript_sdk_installation&anchorId="
 versions:
-  - sha: #1414561
+  - sha: ad3d59eba34ca4483bbe53384ab4ed3e1d459055
     changeNotes: Initial release.
