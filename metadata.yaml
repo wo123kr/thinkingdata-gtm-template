@@ -1,18 +1,11 @@
-homepage: "https://github.com/thinkingdata/gtm-template"
-documentation: "https://github.com/thinkingdata/gtm-template/blob/main/README.md"
+homepage: "https://www.thinkingdata.cn"
+documentation: "https://docs.thinkingdata.cn/ta-manual/latest/installation/installation_menu/client_sdk/web_sdk_installation/web_sdk_installation.html"
 versions:
-  - sha: "1a2b3c4d5e6f7890abcdef1234567890abcdef12"
+  - sha: PLACEHOLDER_SHA_WILL_BE_UPDATED_AFTER_COMMIT
     changeNotes: |
-      🎉 첫 번째 릴리스 v1.0.0
-      
-      기능:
-      - ThinkingData SDK 연동
-      - 커스텀 속성을 포함한 이벤트 추적
-      - 사용자 식별 지원
-      - 자동 추적 기능
-      - 개발용 디버그 모드
-      
-      지원 이벤트:
-      - 페이지 조회
-      - 커스텀 이벤트
-      - 사용자 속성
+      Initial release of ThinkingData Analytics template.
+      Features:
+      - Event tracking
+      - User identification
+      - User properties management
+      - Real-time data transmission
