@@ -1,4 +1,4 @@
-﻿___TERMS_OF_SERVICE___
+___TERMS_OF_SERVICE___
 
 By creating or modifying this file you agree to Google Tag Manager's Community
 Template Gallery Developer Terms of Service available at
@@ -186,7 +186,37 @@ ___TEMPLATE_PARAMETERS___
         "paramName": "actionType",
         "paramValue": "track",
         "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "PARAM_TABLE",
+    "name": "superProperties",
+    "displayName": "공통 속성",
+    "paramTableColumns": [
+      {
+        "param": {
+          "type": "TEXT",
+          "name": "key",
+          "displayName": "속성 키",
+          "simpleValueType": true,
+          "help": "속성의 이름 (영문 권장) 예 : user_type"
+        },
+        "isUnique": false
       },
+      {
+        "param": {
+          "type": "TEXT",
+          "name": "value",
+          "displayName": "속성 값",
+          "simpleValueType": true,
+          "help": "속성의 값 (문자열, 숫자, 불린) 예: premium, 1, true"
+        },
+        "isUnique": false
+      }
+    ],
+    "help": "모든 이벤트에 자동으로 포함될 공통 속성들입니다.",
+    "enablingConditions": [
       {
         "paramName": "actionType",
         "paramValue": "setSuperProperties",
@@ -284,7 +314,7 @@ ___TEMPLATE_PARAMETERS___
   },
   {
     "type": "SIMPLE_TABLE",
-    "name": "userproperties",
+    "name": "userProperties",
     "displayName": "유저 속성",
     "simpleTableColumns": [
       {
@@ -304,7 +334,7 @@ ___TEMPLATE_PARAMETERS___
     "enablingConditions": [
       {
         "paramName": "enableUserProperties",
-        "paramValue": "ture",
+        "paramValue": true,
         "type": "EQUALS"
       },
       {
@@ -320,11 +350,10 @@ ___TEMPLATE_PARAMETERS___
     "displayName": "(유저 속성) 숫자 속성 누적",
     "simpleTableColumns": [
       {
-        "defaultValue": "user_name",
+        "defaultValue": "",
         "displayName": "속성명",
         "name": "name",
-        "type": "TEXT",
-        "valueHint": "홍길동"
+        "type": "TEXT"
       },
       {
         "defaultValue": "",
@@ -375,6 +404,33 @@ ___TEMPLATE_PARAMETERS___
       {
         "paramName": "userPropertyMethod",
         "paramValue": "user_append",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "SIMPLE_TABLE",
+    "name": "userPropertiesUniqAppend",
+    "displayName": "(유저 속성) 배열 고유값 추가",
+    "simpleTableColumns": [
+      {
+        "defaultValue": "",
+        "displayName": "속성명",
+        "name": "name",
+        "type": "TEXT"
+      },
+      {
+        "defaultValue": "",
+        "displayName": "추가할 값들",
+        "name": "values",
+        "type": "TEXT"
+      }
+    ],
+    "help": "배열 속성에 고유값만 추가합니다. 여러 값은 쉼표(,)로 구분하여 입력하세요",
+    "enablingConditions": [
+      {
+        "paramName": "enableUserProperties",
+        "paramValue": true,
         "type": "EQUALS"
       },
       {
@@ -481,13 +537,17 @@ function executeAction() {
     handleLogout(ta);
   } else if (actionType === 'setSuperProperties') {
     handleSetSuperProperties(ta);
-  } else if (actionType === 'userProperty') {
-    if (!handleUserProperty(ta)) return;
   } else {
     log('Unknown action type: ' + actionType);
     data.gtmOnFailure();
     return;
   }
+  
+  // 유저 속성 처리 (모든 액션에서 실행 가능)
+  if (data.enableUserProperties) {
+    handleUserProperty(ta);
+  }
+  
   data.gtmOnSuccess();
 }
 
@@ -560,9 +620,9 @@ function handleLogout(ta) {
 function handleSetSuperProperties(ta) {
   var superProperties = {};
   var hasAnyKey = false;
-  if (data.eventProperties && data.eventProperties.length > 0) {
-    for (var i = 0; i < data.eventProperties.length; i++) {
-      var prop = data.eventProperties[i];
+  if (data.superProperties && data.superProperties.length > 0) {
+    for (var i = 0; i < data.superProperties.length; i++) {
+      var prop = data.superProperties[i];
       if (prop.key && prop.value !== undefined && prop.value !== '') {
         superProperties[prop.key] = normalizeValue(prop.value);
         hasAnyKey = true;
@@ -579,11 +639,6 @@ function handleSetSuperProperties(ta) {
 
 // 유저 속성 처리
 function handleUserProperty(ta) {
-  if (!data.enableUserProperties) {
-    log('User properties not enabled');
-    return true;
-  }
-
   var method = data.userPropertyMethod || 'user_set';
   var properties = {};
   var hasProperties = false;
@@ -644,7 +699,7 @@ function handleUserProperty(ta) {
       ta.userAdd(properties);
       log('User properties added:', properties);
     }
-  } else if (method === 'user_append' || method === 'user_uniq_append') {
+  } else if (method === 'user_append') {
     if (data.userPropertiesAppend && data.userPropertiesAppend.length > 0) {
       for (var i = 0; i < data.userPropertiesAppend.length; i++) {
         var prop = data.userPropertiesAppend[i];
@@ -667,116 +722,35 @@ function handleUserProperty(ta) {
     }
 
     if (hasProperties) {
-      if (method === 'user_append') {
-        ta.userAppend(properties);
-        log('User properties appended:', properties);
-      } else {
-        ta.userUniqAppend(properties);
-        log('User properties uniquely appended:', properties);
+      ta.userAppend(properties);
+      log('User properties appended:', properties);
+    }
+  } else if (method === 'user_uniq_append') {
+    if (data.userPropertiesUniqAppend && data.userPropertiesUniqAppend.length > 0) {
+      for (var i = 0; i < data.userPropertiesUniqAppend.length; i++) {
+        var prop = data.userPropertiesUniqAppend[i];
+        if (prop.name && prop.values !== undefined && prop.values !== '') {
+          // 쉼표로 구분된 값들을 배열로 변환
+          var valuesArray = prop.values.split(',');
+          var cleanArray = [];
+          for (var j = 0; j < valuesArray.length; j++) {
+            var trimmedValue = valuesArray[j].trim();
+            if (trimmedValue !== '') {
+              cleanArray.push(normalizeValue(trimmedValue));
+            }
+          }
+          if (cleanArray.length > 0) {
+            properties[prop.name] = cleanArray;
+            hasProperties = true;
+          }
+        }
       }
+    }
+
+    if (hasProperties) {
+      ta.userUniqAppend(properties);
+      log('User properties uniquely appended:', properties);
     }
   } else if (method === 'user_unset') {
     if (data.userPropertiesUnset && data.userPropertiesUnset !== '') {
-      // 쉼표로 구분된 속성명들을 배열로 변환
-      var propsToUnset = data.userPropertiesUnset.split(',');
-      var cleanProps = [];
-      for (var i = 0; i < propsToUnset.length; i++) {
-        var trimmedProp = propsToUnset[i].trim();
-        if (trimmedProp !== '') {
-          cleanProps.push(trimmedProp);
-        }
-      }
-      if (cleanProps.length > 0) {
-        ta.userUnset(cleanProps);
-        log('User properties unset:', cleanProps);
-      }
-    }
-  } else if (method === 'user_delete') {
-    if (data.confirmUserDelete) {
-      ta.userDelete();
-      log('User deleted');
-    } else {
-      log('User delete confirmation required');
-      data.gtmOnFailure();
-      return false;
-    }
-  } else {
-    log('Unknown user property method:', method);
-    data.gtmOnFailure();
-    return false;
-  }
-
-  return true;
-}
-
-// SDK 로딩 여부 확인 후 시작
-var existingTa = copyFromWindow('ta');
-if (existingTa) {
-  log('ThinkingData SDK already loaded');
-  executeAction();
-} else {
-  log('Loading ThinkingData SDK...');
-  loadThinkingDataSDK();
-}
-
-
-___WEB_PERMISSIONS___
-
-[
-  {
-    "instance": {
-      "key": {
-        "publicId": "logging",
-        "versionId": "1"
-      },
-      "param": [
-        {
-          "key": "environments",
-          "value": {
-            "type": 1,
-            "string": "debug"
-          }
-        }
-      ]
-    },
-    "clientAnnotations": {
-      "isEditedByUser": true
-    },
-    "isRequired": true
-  },
-  {
-    "instance": {
-      "key": {
-        "publicId": "access_globals",
-        "versionId": "1"
-      },
-      "param": []
-    },
-    "clientAnnotations": {
-      "isEditedByUser": true
-    },
-    "isRequired": true
-  },
-  {
-    "instance": {
-      "key": {
-        "publicId": "inject_script",
-        "versionId": "1"
-      },
-      "param": []
-    },
-    "isRequired": true
-  }
-]
-
-
-___TESTS___
-
-scenarios: []
-
-
-___NOTES___
-
-Created on 2025. 7. 16. 오후 10:01:22
-
-
+      // 쉼표로 구분된 속성명
