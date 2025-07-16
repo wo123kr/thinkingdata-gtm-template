@@ -15,5 +15,5 @@
 homepage: "https://www.thinkingdata.kr"
 documentation: "https://docs-v2.thinkingdata.kr/?version=latest&lan=ko-KR&code=javascript_sdk_installation&anchorId="
 versions:
-  - sha: # 여기에 첫 번째 버전의 Git 커밋 SHA 번호를 입력하세요.
+  - sha: #1414561
     changeNotes: Initial release.
