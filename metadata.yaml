@@ -1,5 +1,5 @@
-homepage: "https://www.thinkingdata.cn"
-documentation: "https://docs.thinkingdata.cn/ta-manual/latest/installation/installation_menu/client_sdk/web_sdk_installation/web_sdk_installation.html"
+homepage: "https://www.thinkingdata.kr"
+documentation: "https://docs-v2.thinkingdata.kr/?version=latest&lan=ko-KR&code=javascript_sdk_installation&anchorId="
 versions:
   - sha: PLACEHOLDER_SHA_WILL_BE_UPDATED_AFTER_COMMIT
     changeNotes: |
