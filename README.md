@@ -1,71 +1,43 @@
-# ThinkingData Google Tag Manager 변수 템플릿
+# ThinkingData Analytics GTM Template
 
-ThinkingData SDK를 Google Tag Manager(구글 태그 매니저, GTM)에서 쉽게 활용할 수 있도록 도와주는 변수 템플릿입니다.
+Google Tag Manager용 ThinkingData 분석 플랫폼 공식 템플릿입니다.
 
----
+## 👨‍💻 개발자
+**제갈진우** - ThinkingData 데이터 분석가
+- Email: jinwoo@thinkingdata.kr
 
-## 주요 기능
+## 🚀 주요 기능
+- **이벤트 추적**: 사용자 행동 및 커스텀 이벤트 추적
+- **사용자 식별**: 고유 사용자 식별 및 관리
+- **사용자 속성**: 사용자 프로필 및 속성 설정
+- **실시간 전송**: 실시간 데이터 수집 및 전송
 
-- ✅ **ThinkingData SDK 사용자 ID 및 속성 변수 제공**
-- ✅ **GTM 변수로 사용자 식별자, 커스텀 속성 등 활용 가능**
-- ✅ **간편한 설치 및 커스터마이즈**
+## 📦 설치 방법
 
----
+### GTM 갤러리에서 설치
+1. Google Tag Manager 컨테이너에 접속
+2. 좌측 메뉴에서 **"템플릿"** 클릭
+3. **"갤러리에서 검색"** 클릭
+4. **"ThinkingData Analytics"** 검색
+5. **"작업공간에 추가"** 클릭
 
-## 설치 방법
+### 수동 설치
+1. 이 저장소에서 `template.tpl` 파일 다운로드
+2. GTM에서 **"템플릿" → "새로 만들기"**
+3. 우상단 **"더보기" → "가져오기"**
+4. `template.tpl` 파일 업로드
 
-1. Google Tag Manager에서 **템플릿** → **갤러리 검색** → “ThinkingData” 검색 후 추가  
-   또는  
-   [이 저장소](https://github.com/yourusername/thinkingdata-gtm-template)에서 템플릿 파일(`ThinkingData Analytics.tpl`)을 다운로드하여 직접 업로드
+## ⚙️ 설정 방법
 
-2. **변수 템플릿**을 선택하여 원하는 변수(GTM 변수)로 등록
+### 1. 기본 설정
+- **App ID**: ThinkingData 프로젝트의 앱 ID
+- **Server URL**: 데이터 수집 서버 URL
 
----
+### 2. 추적 유형 선택
+- **이벤트 추적**: 사용자 행동 이벤트 전송
+- **사용자 식별**: 사용자 ID 설정
+- **사용자 속성**: 사용자 프로필 정보 설정
 
-## 설정 방법
+## 📖 사용 예시
 
-1. **ThinkingData SDK**가 웹사이트에 정상적으로 삽입되어 있어야 합니다.
-2. 변수 생성 시 **SDK 인스턴스명**(기본값: `ta`)을 입력합니다.  
-   (SDK 초기화 시 window 객체에 등록한 이름과 일치해야 합니다.)
-3. 필요에 따라 **속성명** 등 추가 파라미터를 입력합니다.
-
----
-
-## 예시
-
-### 사용자 ID 변수 활용
-
-1. 변수 → 새 변수 → 템플릿 선택 → ThinkingData - User ID
-2. (필요시) 인스턴스명 입력
-3. 저장 후, 태그/트리거 등에서 해당 변수를 사용
-
-### 사용자 속성 변수 활용
-
-1. 변수 → 새 변수 → 템플릿 선택 → ThinkingData - User Property
-2. 속성명(예: `email`, `membership_level`) 입력
-3. 저장 후 활용
-
----
-
-## 자주 묻는 질문(FAQ)
-
-**Q. SDK가 로드되지 않았을 때 값이 어떻게 되나요?**  
-A. SDK가 정상적으로 window에 등록되지 않았을 경우 변수 값은 `undefined` 또는 `null`이 반환됩니다.
-
-**Q. 커스텀 속성은 어떻게 추가하나요?**  
-A. ThinkingData SDK에서 커스텀 속성을 저장하는 방식에 따라, 템플릿에서 해당 속성명만 입력하면 자동으로 값을 반환합니다.
-
----
-
-## 지원 및 문의
-
-- 공식 문서: [https://docs.thinkingdata.kr/](https://docs-v2.thinkingdata.kr/?version=latest&lan=ko-KR&code=pre_installation_menu&anchorId=)
-- 이슈 등록: [GitHub Issues](https://github.com/wo123kr/thinkingdata-gtm-template/issues)
-- 이메일: jinwoo@thinkingdata.kr
-
----
-
-## 라이선스
-
-MIT License  
-자세한 내용은 [LICENSE](LICENSE) 파일을 참고하세요.
+### 이벤트 추적 태그 생성
