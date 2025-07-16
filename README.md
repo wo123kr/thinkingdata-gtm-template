@@ -1,4 +1,3 @@
-```markdown
 # ThinkingData Analytics GTM Template
 
 Google Tag Manager용 ThinkingData 분석 플랫폼 공식 템플릿입니다.
@@ -112,4 +111,3 @@ ThinkingData는 전 세계 기업들이 데이터 기반 의사결정을 내릴 
 ---
 
 **Made with ❤️ by 제갈진우 @ ThinkingData**
-```
